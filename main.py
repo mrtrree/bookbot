@@ -1,3 +1,4 @@
+# Counts characters and words in a book and prints a report
 def main(book):
     print(f"--- Begin report of {book} ---")
     print(f"{count_words(book)} words found in the document")
