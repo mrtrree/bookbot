@@ -1,36 +1,54 @@
-# Counts characters and words in a book and prints a report
-# testing comment
-def main(book):
-    print(f"--- Begin report of {book} ---")
-    print(f"{count_words(book)} words found in the document")
-    count_characters(book)
-    print("--- End Report ---")
+def main():
+    book_path = "books/frankenstein.txt"
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
+
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{num_words} words found in the document")
+    print()
+
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"The '{item['char']}' character was found {item['num']} times")
+
+    print("--- End report ---")
 
 
-def open_txt(book):
-    with open(book) as f:
-        file_contents = f.read()
-    return file_contents
+def get_num_words(text):
+    words = text.split()
+    return len(words)
 
 
-def count_words(book):
-    book_text = open_txt(book)
-    word_list = []
-    word_list = book_text.split()
-    word_count = len(word_list)
-    return(word_count)
+def sort_on(d):
+    return d["num"]
 
 
-def count_characters(book):
-    book_text = open_txt(book).lower()
-    character_count = {}
-    for l in book_text:
-        if l not in character_count:
-            character_count[l] = 1
+def chars_dict_to_sorted_list(num_chars_dict):
+    sorted_list = []
+    for ch in num_chars_dict:
+        sorted_list.append({"char": ch, "num": num_chars_dict[ch]})
+    sorted_list.sort(reverse=True, key=sort_on)
+    return sorted_list
+
+
+def get_chars_dict(text):
+    chars = {}
+    for c in text:
+        lowered = c.lower()
+        if lowered in chars:
+            chars[lowered] += 1
         else:
-            character_count[l] = character_count[l] + 1
-    for i in character_count:
-        print(f"The {i} character was found {character_count[i]} times")
+            chars[lowered] = 1
+    return chars
 
 
-main("books/frankenstein.txt")
+
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
+
+
+main()
